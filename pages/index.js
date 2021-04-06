@@ -9,10 +9,24 @@ export default function Home() {
   const sendText = () => {
     if (chatBox === "") return;
 
-    setChat([ ...chatLog, {speaker: "me", message: chatBox} ]);
-    setChatBox("");
+    let data = {
+      inputs: {
+        text: chatBox,
+        generated_responses: [],
+        past_user_inputs: []
+      }
+    }
+    chatLog.forEach(log=> {
+      if (log.speaker == "me") {
+        data.inputs.past_user_inputs.push(log.message);
+      } else {
+        data.inputs.generated_responses.push(log.message);
+      }
+    })
 
-    // Request reply from server
+    setChat([ ...chatLog, {speaker: "me", message: chatBox, isTyping: false} ]);
+    setChatBox("");
+    
     
   }
   useEffect(() => {
@@ -29,7 +43,7 @@ export default function Home() {
           <ChatLog chatLog={chatLog} setChatSwiper={setChatSwiper} />
           <div className="chat-type flex bg-white">
             <textarea className="flex-grow px-2 py-3 resize-none h-10 outline-none" rows="1" onChange={e=>setChatBox(e.target.value)} value={chatBox}></textarea>
-            <button className="px-4 uppercase text-indigo-600 font-bold tracking-wide outline-none focus:outline-none hover:text-indigo-500" onClick={sendText}>Send</button>
+            <button className="px-4 uppercase text-indigo-600 font-bold tracking-wide outline-none focus:outline-none hover:text-indigo-500" onClick={sendText} disabled={chatLog.length > 0 ? chatLog[chatLog.length-1].isTyping : false}>Send</button>
           </div>
         </div>
         {/* <div className="chat-image flex w-full h-full bg-black justify-items-center items-center">
@@ -39,4 +53,3 @@ export default function Home() {
     </>
   )
 }
-

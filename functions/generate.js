@@ -5,20 +5,16 @@ exports.handler = async function(event, context) {
     API_TOKEN = process.env.API_TOKEN;
     API_URL = process.env.API_URL;
 
-    let input = JSON.parse(event.body).context;
+    let inputs = JSON.parse(event.body).inputs;
     
     let data = {
-        inputs: {
-            text: input,
-            generated_responses: [],
-            past_user_inputs: []
-        }, 
+        ...inputs,
         options: {
             use_cache: false
         }
     }
 
-    res = await fetch(API_URL, {
+    let res = await fetch(API_URL, {
         method: 'POST',
         mode: 'cors',
         headers: {"Authorization": "Bearer " + API_TOKEN},
