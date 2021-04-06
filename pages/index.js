@@ -27,7 +27,16 @@ export default function Home() {
     setChat([ ...chatLog, {speaker: "me", message: chatBox, isTyping: false} ]);
     setChatBox("");
     
-    
+    fetch('/api/generate', {
+      method: 'POST',
+      mode: 'cors',
+      // headers: {"Authorization": "Bearer " + API_TOKEN},
+      body: JSON.stringify(data)
+    })
+    .then(res=>res.json())
+    .then(res=>{
+      console.log(res);
+    })
   }
   useEffect(() => {
     if (Object.keys(chatSwiper).length === 0) return;
