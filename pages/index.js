@@ -1,28 +1,46 @@
+import { useState, useEffect } from 'react'
 import Header from '../components/Header'
-import Chat from '../components/Chat'
+import ChatLog from '../components/ChatLog'
 
 export default function Home() {
+  const [chatLog, setChat] = useState([
+    { speaker: "me", message: "Lorem ipsum." },
+    { speaker: "brother", message: "Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf" },
+    { speaker: "me", message: "Lorem ipsum." },
+    { speaker: "brother", message: "Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf" },
+    { speaker: "brother", message: "Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf" },
+    { speaker: "me", message: "Lorem ipsum." },
+    { speaker: "brother", message: "Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf" },
+    { speaker: "brother", message: "Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf" },
+    { speaker: "me", message: "Lorem ipsum." },
+    { speaker: "brother", message: "Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf" },
+    { speaker: "brother", message: "Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf" },
+    { speaker: "me", message: "Lorem ipsum." },
+    { speaker: "brother", message: "Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf" },
+    { speaker: "brother", message: "Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf" },
+  ])
+  const [chatBox, setChatBox] = useState('')
+  const [chatSwiper, setChatSwiper] = useState({})
+  const sendText = () => {
+    if (chatBox === "") return;
+
+    setChat([ ...chatLog, {speaker: "me", message: chatBox} ]);
+    setChatBox("");
+  }
+  useEffect(() => {
+    if (Object.keys(chatSwiper).length === 0) return;
+    // Scroll the chat history to the bottom
+    chatSwiper.update()
+    chatSwiper.slideNext(100)
+  }, [chatLog])
   return (
     <>
       <Header />
-      <main class="container mx-auto text-xs h-screen flex flex-col">
-        <div class="chat-history overflow-y-auto py-2 flex-grow">
-          <Chat>Lorem ipsum</Chat>
-          <Chat speaker="brother">Lorem ipsum dolor sit </Chat>
-          <Chat speaker="brother">Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf </Chat>
-          <Chat>Lorem ipsum</Chat>
-          <Chat speaker="brother">Lorem ipsum dolor sit </Chat>
-          <Chat speaker="brother">Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf </Chat>
-          <Chat>Lorem ipsum</Chat>
-          <Chat speaker="brother">Lorem ipsum dolor sit </Chat>
-          <Chat speaker="brother">Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf </Chat>
-          <Chat>Lorem ipsum</Chat>
-          <Chat speaker="brother">Lorem ipsum dolor sit </Chat>
-          <Chat speaker="brother" isTyping={true}>Lorem ipsum dolor sit asdf sadfa sdds fasdfds sdaf dsafsdf</Chat>
-        </div>
-        <div class="chat-type flex bg-white">
-          <textarea class="flex-grow px-2 py-2 resize-none" rows="1"></textarea>
-          {/* <button class="px-3 uppercase">Send</button> */}
+      <main className="container mx-auto text-xs h-screen flex flex-col select-none">
+        <ChatLog chatLog={chatLog} setChatSwiper={setChatSwiper} />
+        <div className="chat-type flex bg-white">
+          <textarea className="flex-grow px-2 py-3 resize-none h-10 outline-none" rows="1" onChange={e=>setChatBox(e.target.value)} value={chatBox}></textarea>
+          <button className="px-4 uppercase text-indigo-600 font-bold tracking-wide outline-none focus:outline-none hover:text-indigo-500" onClick={sendText}>Send</button>
         </div>
       </main>
     </>
