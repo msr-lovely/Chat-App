@@ -3,15 +3,17 @@ import Header from '../components/Header'
 import ChatLog from '../components/ChatLog'
 
 export default function Home() {
-  const [chatLog, setChat] = useState([])
+  const [chatLog, setChatLog] = useState([])
   const [chatBox, setChatBox] = useState('')
   const [chatSwiper, setChatSwiper] = useState({})
-  const sendText = () => {
+  const sendText = async () => {
     if (chatBox === "") return;
+
+    let chatString = (' ' + chatBox).slice(1);
 
     let data = {
       inputs: {
-        text: chatBox,
+        text: chatString,
         generated_responses: [],
         past_user_inputs: []
       }
@@ -24,9 +26,19 @@ export default function Home() {
       }
     })
 
-    setChat([ ...chatLog, {speaker: "me", message: chatBox, isTyping: false} ]);
+    const newLog = [ ...chatLog, 
+      {speaker: "me", message: chatString, isTyping: false}, 
+    ];
+    const newLog2 = [ ...newLog, 
+      {speaker: "man", message: "", isTyping: true} 
+    ];
+    setChatLog(newLog);
     setChatBox("");
-    
+
+    setTimeout(()=> {
+      setChatLog(newLog2);
+    }, 300);
+
     fetch('/api/generate', {
       method: 'POST',
       mode: 'cors',
@@ -35,14 +47,22 @@ export default function Home() {
     })
     .then(res=>res.json())
     .then(res=>{
-      console.log(res);
-    })
+      if ((newLog2.length == 0) || res.hasOwnProperty("error")) return;
+
+      const newLog3 = [...newLog2];
+      newLog3[newLog3.length - 1].message = res.res.trim();
+      newLog3[newLog3.length - 1].isTyping = false;
+      // console.log(res, newLog2);
+
+      // change isTyping from last chat
+      setChatLog(newLog3);
+    });
   }
   useEffect(() => {
     if (Object.keys(chatSwiper).length === 0) return;
     // Scroll the chat history to the bottom
-    chatSwiper.update()
-    chatSwiper.slideNext(100)
+    chatSwiper.update();
+    chatSwiper.slideNext(100);
   }, [chatLog])
   return (
     <>

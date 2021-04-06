@@ -20,7 +20,7 @@ const ChatLog = ({chatLog, setChatSwiper}) => {
             >
                 <SwiperSlide>
                     {chatLog.map((chat, i) => (
-                    <Chat key={i} speaker={chat.speaker}>{chat.message}</Chat>
+                    <Chat key={i} speaker={chat.speaker} isTyping={chat.isTyping}>{chat.message}</Chat>
                     ))}
                 </SwiperSlide>
             </Swiper>
