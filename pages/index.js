@@ -9,7 +9,7 @@ export default function Home() {
   const [chatDisabled, setChatDisabled] = useState(false)
 
   // When user press "SEND" to send their new message.
-  const sendText = async () => {
+  const sendText = () => {
     if (chatBox === "") return;
 
     setChatDisabled(true);
@@ -50,7 +50,9 @@ export default function Home() {
     .then(res=>res.json())
     .then(res=>{
       setChatDisabled(false);
-      if ((newLog2.length == 0) || res.hasOwnProperty("error")) return;
+
+      // TODO: retry again, just in case the model is still loading
+      if (newLog2.length == 0) return;
 
       // change isTyping from last chat
       const newLog3 = [...newLog2];
@@ -59,6 +61,9 @@ export default function Home() {
       // console.log(res, newLog2);
 
       setChatLog(newLog3);
+    })
+    .catch(err=> {
+      // TODO: retry again, just in case the model is still loading
     });
   }
 
@@ -77,7 +82,20 @@ export default function Home() {
         <div className="chat-container text-xs flex flex-col h-full">
           <ChatLog chatLog={chatLog} setChatSwiper={setChatSwiper} />
           <div className="chat-type flex bg-white">
-            <textarea className="flex-grow px-2 py-3 resize-none h-10 outline-none" rows="1" onChange={e=>setChatBox(e.target.value)} value={chatBox}></textarea>
+            <textarea 
+              className="flex-grow px-2 py-3 resize-none h-10 outline-none" 
+              rows="1" 
+              onChange={e=> {setChatBox(e.target.value.replace("\n",""))}} 
+              value={chatBox} 
+              onKeyPress={
+                e=>{
+                  if(e.key == "Enter") {
+                    sendText(); 
+                  } 
+                }
+              }
+            >
+            </textarea>
             <button className={`px-4 uppercase font-bold tracking-wide outline-none focus:outline-none ${chatDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-500'}`} onClick={sendText} disabled={chatDisabled}>Send</button>
           </div>
         </div>
