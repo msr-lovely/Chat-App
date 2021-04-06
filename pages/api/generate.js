@@ -17,7 +17,7 @@ export default (req, res) => {
   }
   res.status(200).json(data)
 
-  let res = await fetch(API_URL, {
+  fetch(API_URL, {
       method: 'POST',
       mode: 'cors',
       headers: {"Authorization": "Bearer " + API_TOKEN},
@@ -25,17 +25,12 @@ export default (req, res) => {
   })
   .then(response => response.json())
   .then(data => {
-      if (data == null) return [];
-
-      return d.generated_text;
+    if (data == null) {
+      res.status(500).json({error: "Cannot access inference server."});
+    }
+    res.status(200).json({res: data.generated_text})
   })
   .catch( err => {
-      return [];
+    res.status(500).json({error: err});
   });
-
-  if (res.length != 0) {
-    res.status(200).json({res: res})
-  } else {
-    res.status(500).json({error: res})
-  }
 }
