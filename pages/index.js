@@ -41,20 +41,18 @@ export default function Home() {
 
     fetch('/api/generate', {
       method: 'POST',
-      mode: 'cors',
-      // headers: {"Authorization": "Bearer " + API_TOKEN},
       body: JSON.stringify(data)
     })
     .then(res=>res.json())
     .then(res=>{
       if ((newLog2.length == 0) || res.hasOwnProperty("error")) return;
 
+      // change isTyping from last chat
       const newLog3 = [...newLog2];
       newLog3[newLog3.length - 1].message = res.res.trim();
       newLog3[newLog3.length - 1].isTyping = false;
       // console.log(res, newLog2);
 
-      // change isTyping from last chat
       setChatLog(newLog3);
     });
   }
