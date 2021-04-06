@@ -6,9 +6,13 @@ export default function Home() {
   const [chatLog, setChatLog] = useState([])
   const [chatBox, setChatBox] = useState('')
   const [chatSwiper, setChatSwiper] = useState({})
+  const [chatDisabled, setChatDisabled] = useState(false)
+
+  // When user press "SEND" to send their new message.
   const sendText = async () => {
     if (chatBox === "") return;
 
+    setChatDisabled(true);
     let chatString = (' ' + chatBox).slice(1);
 
     let data = {
@@ -45,6 +49,7 @@ export default function Home() {
     })
     .then(res=>res.json())
     .then(res=>{
+      setChatDisabled(false);
       if ((newLog2.length == 0) || res.hasOwnProperty("error")) return;
 
       // change isTyping from last chat
@@ -56,12 +61,15 @@ export default function Home() {
       setChatLog(newLog3);
     });
   }
+
+  // Scroll to the bottom for each new chat
   useEffect(() => {
     if (Object.keys(chatSwiper).length === 0) return;
     // Scroll the chat history to the bottom
     chatSwiper.update();
     chatSwiper.slideNext(100);
-  }, [chatLog])
+  }, [chatLog]);
+
   return (
     <>
       <Header />
@@ -70,7 +78,7 @@ export default function Home() {
           <ChatLog chatLog={chatLog} setChatSwiper={setChatSwiper} />
           <div className="chat-type flex bg-white">
             <textarea className="flex-grow px-2 py-3 resize-none h-10 outline-none" rows="1" onChange={e=>setChatBox(e.target.value)} value={chatBox}></textarea>
-            <button className="px-4 uppercase text-indigo-600 font-bold tracking-wide outline-none focus:outline-none hover:text-indigo-500" onClick={sendText} disabled={chatLog.length > 0 ? chatLog[chatLog.length-1].isTyping : false}>Send</button>
+            <button className={`px-4 uppercase font-bold tracking-wide outline-none focus:outline-none ${chatDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-500'}`} onClick={sendText} disabled={chatDisabled}>Send</button>
           </div>
         </div>
         {/* <div className="chat-image flex w-full h-full bg-black justify-items-center items-center">

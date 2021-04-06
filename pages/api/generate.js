@@ -11,9 +11,11 @@ export default (req, res) => {
   let data = {
       ...inputs,
       options: {
-          use_cache: false
+          use_cache: true
       }
   }
+
+  console.log(data);
 
   fetch(API_URL, {
       method: 'POST',
