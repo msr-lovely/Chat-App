@@ -11,7 +11,7 @@ export default (req, res) => {
   let data = {
       ...inputs,
       options: {
-          use_cache: true
+          use_cache: false
       }
   }
 
