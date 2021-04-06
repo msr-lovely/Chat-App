@@ -22,7 +22,9 @@ const ChatLog = ({chatLog, setChatSwiper}) => {
                 <SwiperSlide>
                     <Chat speaker="man">
                         <div>
-                        This chatbot is brought to you by <a href={MY_URL} className="text-indigo-600 cursor-pointer select-text">Melisa Surja</a>.
+                        This chatbot is brought to you by <a href={MY_URL} className="text-indigo-600 cursor-pointer select-text">Melisa Surja</a>. 
+                        <br />
+                        Please visit my site to see more of my portfolio!
                         </div>
                     </Chat>
                     <Chat speaker="man">
