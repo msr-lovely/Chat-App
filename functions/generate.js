@@ -5,15 +5,14 @@ exports.handler = async function(event, context) {
     API_TOKEN = process.env.API_TOKEN;
     API_URL = process.env.API_URL;
 
-    let input = JSON.parse(event.body).context + " [endprompt]";
+    let input = JSON.parse(event.body).context;
     
     let data = {
-        inputs: input, 
-        parameters: {
-            top_k: 50,
-            top_p: 0.95,
-            num_return_sequences: 3
-        },
+        inputs: {
+            text: input,
+            generated_responses: [],
+            past_user_inputs: []
+        }, 
         options: {
             use_cache: false
         }
@@ -27,20 +26,9 @@ exports.handler = async function(event, context) {
     })
     .then(response => response.json())
     .then(data => {
-        if (data[0] == null) return [];
+        if (data == null) return {};
 
-        return data.map(d=> {
-            let txt = d.generated_text;
-    
-            // remove prompt
-            txt = txt.replace(input, "")
-            txt = txt.replace(/\( /g, "(").replace(/ \)/g, ")");
-            txt = txt.replace(/(\s*\[endprompt\]\s*)/g, "");
-            txt = txt.replace(/(\s*\[newline\]\s*)+/g, "</p><p>");
-            txt = txt.replace(/\[\w+\]/g, "").replace(/\~/g, "").trim();
-    
-            return "<p>" + txt + "</p>";
-        });
+        return d.generated_text;
     })
     .catch( err => {
         return [];

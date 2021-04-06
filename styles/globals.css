@@ -9,7 +9,7 @@ body {
 .container {
     max-width: 320px;
 }
-.chat-container {
+.chat-grid {
     grid-template-columns: 40px auto 40px;
 }
 

@@ -4,7 +4,7 @@ import ChatTyping from '../components/ChatTyping'
 
 const Chat = ({children, speaker, isTyping}) => {
     return (
-        <div className="chat-container grid mb-2">
+        <div className="chat-grid grid mb-2">
             {speaker == "me" ? 
                 <div>&nbsp;</div> 
             : 

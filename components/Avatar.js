@@ -1,7 +1,8 @@
 const Avatar = ({speaker}) => {
+    const avatarURL = `/avatars/${speaker}.jpg`;
     return (
         <>
-            <img src={`/avatars/${speaker}.jpg`} className="rounded-md avatar" />
+            <img src={avatarURL} className="rounded-md avatar" />
         </>
     )
 }
