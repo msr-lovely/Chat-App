@@ -9,6 +9,33 @@ export default function Home() {
   const [chatDisabled, setChatDisabled] = useState(false)
 
   // When user press "SEND" to send their new message.
+  const fetchGenerate = (data, theLog) => {
+    fetch('/api/generate', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+    .then(res=>res.json())
+    .then(res=>{
+      setChatDisabled(false);
+
+      if (theLog.length == 0) return;
+
+      // change isTyping from last chat
+      const newLog3 = [...theLog];
+      newLog3[newLog3.length - 1].message = res.res.trim();
+      newLog3[newLog3.length - 1].isTyping = false;
+      console.log("Success!", res, theLog);
+
+      setChatLog(newLog3);
+    })
+    .catch(err=> {
+      console.log("Error, retrying...")
+      // Retry again, just in case the model is still loading
+      setTimeout(()=> {
+        fetchGenerate(data, theLog)
+      }, 1000);
+    });
+  }
   const sendText = () => {
     if (chatBox === "") return;
 
@@ -43,28 +70,7 @@ export default function Home() {
       setChatLog(newLog2);
     }, 300);
 
-    fetch('/api/generate', {
-      method: 'POST',
-      body: JSON.stringify(data)
-    })
-    .then(res=>res.json())
-    .then(res=>{
-      setChatDisabled(false);
-
-      // TODO: retry again, just in case the model is still loading
-      if (newLog2.length == 0) return;
-
-      // change isTyping from last chat
-      const newLog3 = [...newLog2];
-      newLog3[newLog3.length - 1].message = res.res.trim();
-      newLog3[newLog3.length - 1].isTyping = false;
-      // console.log(res, newLog2);
-
-      setChatLog(newLog3);
-    })
-    .catch(err=> {
-      // TODO: retry again, just in case the model is still loading
-    });
+    fetchGenerate(data, newLog2);
   }
 
   // Scroll to the bottom for each new chat

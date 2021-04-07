@@ -28,6 +28,9 @@ const ChatLog = ({chatLog, setChatSwiper}) => {
                         </div>
                     </Chat>
                     <Chat speaker="man">
+                        If the AI gets stuck in the beginning loading forever, please refresh the site.
+                    </Chat>
+                    <Chat speaker="man">
                         Let's have a chat!
                     </Chat>
                     {chatLog.map((chat, i) => (
