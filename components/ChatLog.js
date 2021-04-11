@@ -28,7 +28,7 @@ const ChatLog = ({chatLog, setChatSwiper}) => {
                         </div>
                     </Chat>
                     <Chat speaker="man">
-                        It takes some time for the initial load because the server needs to load the model. Subsequent chat will load faster!
+                        It takes some time for the initial load because the server needs to load the model.
                     </Chat>
                     <Chat speaker="man">
                         Let's have a chat!
