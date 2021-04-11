@@ -28,7 +28,7 @@ const ChatLog = ({chatLog, setChatSwiper}) => {
                         </div>
                     </Chat>
                     <Chat speaker="man">
-                        If the AI gets stuck in the beginning loading forever, please refresh the site.
+                        It takes some time for the initial load because the server needs to load the model. Subsequent chat will load faster!
                     </Chat>
                     <Chat speaker="man">
                         Let's have a chat!
